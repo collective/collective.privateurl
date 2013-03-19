@@ -1,0 +1,15 @@
+Changelog
+=========
+
+1.1
+---
+
+* add z3c.autoinclude.plugin to setup.py
+
+* use plone.registry for private url settings
+
+1.0
+---
+
+* Initial release
+
