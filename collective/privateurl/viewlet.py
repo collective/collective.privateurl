@@ -13,6 +13,11 @@ class PrivateURL(ViewletBase):
             (self.context, self.request), name=u'plone_portal_state')
 
     def index(self):
+        # we set raised_unauthorized on the request to prevent
+        # re-raising Unauthorized when the standard error message is
+        # rendered
+        if self.request.has_key('raised_unauthorized'):
+            return ''
         portal = self.portal_state.portal()
         if portal.hasProperty('privateurls'):           
             if self.portal_state.anonymous() \
@@ -23,6 +28,6 @@ class PrivateURL(ViewletBase):
                             return ''
                 for url in portal.privateurls:
                     if self.request.URL.startswith(url):
+                        self.request['raised_unauthorized'] = True
                         raise Unauthorized                
         return ''
-
