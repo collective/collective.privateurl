@@ -1,3 +1,4 @@
+import inspect
 import re
 from zExceptions import Unauthorized
 from zope.component import getMultiAdapter
@@ -13,11 +14,11 @@ class PrivateURL(ViewletBase):
             (self.context, self.request), name=u'plone_portal_state')
 
     def index(self):
-        # we set raised_unauthorized on the request to prevent
-        # re-raising Unauthorized when the standard error message is
+        # prevent re-raising Unauthorized when the standard error message is
         # rendered
-        if self.request.has_key('raised_unauthorized'):
-            return ''
+        for frame_tuple in inspect.stack():
+            if frame_tuple[0].f_code.co_name == 'raise_standardErrorMessage':
+                return ''
         portal = self.portal_state.portal()
         if portal.hasProperty('privateurls'):           
             if self.portal_state.anonymous() \
